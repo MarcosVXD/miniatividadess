@@ -11,41 +11,66 @@ class MeuAplicativo extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Tela1(),
+      home: const Cadastro(),
     );
   }
 }
 
 
-class Tela1 extends StatelessWidget {
-  const Tela1({super.key});
+
+class Cadastro extends StatefulWidget {
+  const Cadastro({super.key});
+
+  @override
+  State<Cadastro> createState() => _CadastroState();
+}
+
+class _CadastroState extends State<Cadastro> {
+  final TextEditingController nomeController = TextEditingController();
+
+  @override
+  void dispose() {
+    nomeController.dispose();
+    super.dispose();
+  }
+
+  void abrirResumo() {
+    final String nome = nomeController.text;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TelaResumo(
+          nome: nome,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      appBar: AppBar(
+        title: const Text('Cadastro'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Bem-vindo',
-              style: TextStyle(
-                fontSize: 24,
+            TextField(
+              controller: nomeController,
+              decoration: const InputDecoration(
+                labelText: 'Nome',
+                border: OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Tela2(),
-                  ),
-                );
-              },
-              child: const Text('Entrar'),
+              onPressed: abrirResumo,
+              child: const Text('Continuar'),
             ),
           ],
         ),
@@ -54,34 +79,26 @@ class Tela1 extends StatelessWidget {
   }
 }
 
+class TelaResumo extends StatelessWidget {
+  final String nome;
 
-class Tela2 extends StatelessWidget {
-  const Tela2({super.key});
+  const TelaResumo({
+    super.key,
+    required this.nome,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Tela Resumo'),
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Você entrou no sistema!',
-              style: TextStyle(
-                fontSize: 24,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 20),
-
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Voltar'),
-            ),
-          ],
+        child: Text(
+          nome,
+          style: const TextStyle(
+            fontSize: 24,
+          ),
         ),
       ),
     );
